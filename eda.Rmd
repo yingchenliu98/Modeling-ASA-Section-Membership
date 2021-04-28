@@ -71,8 +71,15 @@ member$AnySection = as.factor(member$AnySection)
 member$DontPublish = as.factor(member$DontPublish)
 member$Gender = as.factor(member$Gender)
 ```
+
 ### Missing value
+USA.CAN column has 12 missing value, which is less than 1% of the total data. We will impute the missing value with the mean of this column.
 ```{r}
 sum(is.na(member$USA.CAN)) 
-member$USA.CAN = as.factor(member$USA.CAN)
+member$USA.CAN[is.na(member$USA.CAN)] = 'Yes'
+# any better way to convert yes/no to 1/0 ??
+member$USA.CAN = as.numeric(as.factor(member$USA.CAN))-1
+member %>% 
+  count(USA.CAN)
+
 ```
