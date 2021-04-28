@@ -1,0 +1,72 @@
+---
+title: "Final Project EDA"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+member = read_csv('data/member-data-2020-stat149.csv')
+head(member)
+```
+
+```{r}
+dim(member)
+```
+
+```{r}
+summary(member)
+```
+```{r}
+member %>% 
+  count(AnySection)
+```
+
+## Visualization
+```{r}
+ggplot(member, aes(USA.CAN, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("USA.CAN") 
+
+ggplot(member, aes(JSMtot, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("JSMtot") 
+
+ggplot(member, aes(DontPublish, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("DontPublish") 
+
+ggplot(member, aes(MEMTYPE, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("MEMTYPE") 
+
+ggplot(member, aes(Age, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("Age") 
+
+ggplot(member, aes(AgeJoinedASA, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("AgeJoinedASA") 
+
+ggplot(member, aes(Gender, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("Gender") 
+
+ggplot(member, aes(EmploymentCategory, fill = AnySection)) +     
+   scale_x_discrete(guide = guide_axis(n.dodge=3))+
+   geom_bar(position = 'dodge')+ggtitle("EmploymentCategory") 
+
+ggplot(member, aes(InChapter, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("InChapter") 
+
+
+```
+
+## Data processing
+
+### Missing value
+```{r}
+sum(is.na(member$USA.CAN)) 
+member$USA.CAN = as.factor(member$USA.CAN)
+```
