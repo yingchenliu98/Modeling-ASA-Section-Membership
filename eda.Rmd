@@ -30,6 +30,7 @@ member %>%
   count(AnySection)
 ```
 
+
 ## Visualization
 ```{r}
 ggplot(member, aes(USA.CAN, fill = AnySection)) +     
@@ -65,6 +66,11 @@ ggplot(member, aes(InChapter, fill = AnySection)) +
 
 ## Data processing
 
+```{r}
+member$AnySection = as.factor(member$AnySection)
+member$DontPublish = as.factor(member$DontPublish)
+member$Gender = as.factor(member$Gender)
+```
 ### Missing value
 ```{r}
 sum(is.na(member$USA.CAN)) 
