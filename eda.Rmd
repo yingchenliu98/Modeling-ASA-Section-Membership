@@ -11,6 +11,7 @@ library(tidyverse)
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+library(mice)
 ```
 
 ```{r}
@@ -24,6 +25,7 @@ dim(member)
 
 ```{r}
 summary(member)
+
 ```
 ```{r}
 member %>% 
@@ -64,6 +66,8 @@ ggplot(member, aes(InChapter, fill = AnySection)) +
 
 ```
 
+
+
 ## Data processing
 
 
@@ -74,6 +78,48 @@ member$AnySection = as.numeric(as.factor(member$AnySection))-1
 member$DontPublish = as.numeric(as.factor(member$DontPublish))-1
 member$MEMTYPE = as.numeric(as.factor(member$MEMTYPE))-1
 member$InChapter = as.numeric(as.factor(member$InChapter))-1
+member$P.SEC.BE = as.numeric(as.factor(member$P.SEC.BE))-1
+member$P.SEC.BIOM = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.BIOP = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.CNSL = as.numeric(as.factor(member$P.SEC.CNSL))-1
+
+member$P.SEC.COMP = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.EDUC = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.ENVR = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.EPI = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.GOVT = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.GRPH = as.numeric(as.factor(member$P.SEC.CNSL))-1
+
+member$P.SEC.HPSS = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.MDD = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.MHS = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.MKTG = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.NPAR = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.QP = as.numeric(as.factor(member$P.SEC.CNSL))-1
+
+member$P.SEC.SBSS = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.SDNS= as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.SGG = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.SI = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.SIS = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.SLDM = as.numeric(as.factor(member$P.SEC.CNSL))-1
+
+member$P.SEC.SOC = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.SPES= as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.SRMS = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.SSPA = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.TSHS = as.numeric(as.factor(member$P.SEC.BIOP))-1
+
+```
+category1: Business and Economics government 
+BE, CNSL, 
+category2:
+```{r}
+# Business and Economics Statistics
+```
+
+```{r}
+member
 ```
 
 USA.CAN column has 12 missing values, which are less than 1% of the total data. We will impute the missing value with the mean of this column.
@@ -91,5 +137,27 @@ EmploymentCategory column has 4216 missing values.
 ```{r}
 sum(is.na(member$Gender)) 
 sum(is.na(member$EmploymentCategory))
+```
+
+```{r}
+md.pattern(member)
+```
+```{r}
+imp <- mice(member, method = "pmm", m = 5, maxit = 50, printFlag = FALSE)
+member.imp <- complete(imp)
+summary(member.imp)
+```
+
+```{r}
+member.na <-na.convert.mean(member)
+
+```
+```{r}
+summary(member.imp)
+```
+
+```{r}
+lm.vif <- lm(AnySection ~ Age, data = member)
+car::vif(lm.vif)
 ```
 
