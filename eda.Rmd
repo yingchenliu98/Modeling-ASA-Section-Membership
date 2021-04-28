@@ -149,15 +149,7 @@ summary(member.imp)
 ```
 
 ```{r}
-member.na <-na.convert.mean(member)
+#member.na <-na.convert.mean(member)
 
-```
-```{r}
-summary(member.imp)
-```
-
-```{r}
-lm.vif <- lm(AnySection ~ Age, data = member)
-car::vif(lm.vif)
 ```
 
