@@ -15,7 +15,8 @@ library(mice)
 
 ```{r}
 member = read_csv('data/member-data-2020-stat149.csv')
-# checking head and tail of the dataset
+# CONNOR ADDITION
+# hecking head and tail of the dataset
 head(member)
 tail(member)
 ```
@@ -23,6 +24,7 @@ tail(member)
 ```{r}
 # checking dimensions of the dataset
 dim(member)
+# CONNOR ADDITION
 nrow(member)
 ncol(member)
 ```
@@ -31,23 +33,27 @@ ncol(member)
 summary(member)
 ```
 ```{r}
+# CONNOR ADDITION
 str(member)
 ```
 
 ```{r}
+# CONNOR ADDITION
 # getting the number of missing values column wise
 sapply(member, function(x) sum(is.na(x)))
 ```
 
 ```{r}
+# CONNOR ADDITION
 # getting the number of missing values row wise
 row.nas <- rowSums(is.na(member))
 table(row.nas)
 ```
 
 ```{r}
-# checking for duplicate rows
-duplicate_check <- member %>% distinct(keep)
+# CONNOR ADDITION
+# checking for duplicate rows (this doesn't appear correct though; I'm not sure distinct is working properly here)
+duplicate_check <- member %>% distinct()
 dim(duplicate_check)
 ```
 
@@ -59,6 +65,7 @@ member %>%
 ```
 # Checking if Maybe JSMTot is ordinal
 ```{r}
+# CONNOR ADDITION
 member %>% count(JSMtot)
 ```
 
@@ -104,6 +111,7 @@ ggplot(member, aes(InChapter, fill = AnySection)) +
 ```
 
 ```{r}
+# CONNOR ADDITION
 member %>% count(EmploymentCategory)
 ```
 
@@ -186,10 +194,5 @@ md.pattern(member)
 imp <- mice(member, method = "pmm", m = 5, maxit = 50, printFlag = FALSE)
 member.imp <- complete(imp)
 summary(member.imp)
-```
-
-```{r}
-#member.na <-na.convert.mean(member)
-
 ```
 
