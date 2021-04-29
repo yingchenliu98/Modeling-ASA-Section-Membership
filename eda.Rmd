@@ -1,0 +1,155 @@
+---
+title: "Final Project EDA"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(mice)
+```
+
+```{r}
+member = read_csv('data/member-data-2020-stat149.csv')
+head(member)
+```
+
+```{r}
+dim(member)
+```
+
+```{r}
+summary(member)
+
+```
+```{r}
+member %>% 
+  count(AnySection)
+```
+
+
+## Visualization
+```{r}
+ggplot(member, aes(USA.CAN, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("USA.CAN") 
+
+ggplot(member, aes(JSMtot, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("JSMtot") 
+
+ggplot(member, aes(DontPublish, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("DontPublish") 
+
+ggplot(member, aes(MEMTYPE, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("MEMTYPE") 
+
+ggplot(member, aes(Age, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("Age") 
+
+ggplot(member, aes(AgeJoinedASA, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("AgeJoinedASA") 
+
+ggplot(member, aes(Gender, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("Gender") 
+
+ggplot(member, aes(EmploymentCategory, fill = AnySection)) +     
+   scale_x_discrete(guide = guide_axis(n.dodge=3))+
+   geom_bar(position = 'dodge')+ggtitle("EmploymentCategory") 
+
+ggplot(member, aes(InChapter, fill = AnySection)) +     
+   geom_bar(position = 'dodge')+ggtitle("InChapter") 
+
+
+```
+
+
+
+## Data processing
+
+
+### Missing value
+These columns do not have missing value. We turn yes/no to 1/0.
+```{r}
+member$AnySection = as.numeric(as.factor(member$AnySection))-1
+member$DontPublish = as.numeric(as.factor(member$DontPublish))-1
+member$MEMTYPE = as.numeric(as.factor(member$MEMTYPE))-1
+member$InChapter = as.numeric(as.factor(member$InChapter))-1
+member$P.SEC.BE = as.numeric(as.factor(member$P.SEC.BE))-1
+member$P.SEC.BIOM = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.BIOP = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.CNSL = as.numeric(as.factor(member$P.SEC.CNSL))-1
+
+member$P.SEC.COMP = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.EDUC = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.ENVR = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.EPI = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.GOVT = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.GRPH = as.numeric(as.factor(member$P.SEC.CNSL))-1
+
+member$P.SEC.HPSS = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.MDD = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.MHS = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.MKTG = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.NPAR = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.QP = as.numeric(as.factor(member$P.SEC.CNSL))-1
+
+member$P.SEC.SBSS = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.SDNS= as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.SGG = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.SI = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.SIS = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.SLDM = as.numeric(as.factor(member$P.SEC.CNSL))-1
+
+member$P.SEC.SOC = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.SPES= as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.SRMS = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.SSPA = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.TSHS = as.numeric(as.factor(member$P.SEC.BIOP))-1
+
+```
+category1: Business and Economics government 
+BE, CNSL, 
+category2:
+```{r}
+# Business and Economics Statistics
+```
+
+```{r}
+member
+```
+
+USA.CAN column has 12 missing values, which are less than 1% of the total data. We will impute the missing value with the mean of this column.
+```{r}
+sum(is.na(member$USA.CAN)) 
+member$USA.CAN[is.na(member$USA.CAN)] = 'Yes'
+# any better way to convert yes/no to 1/0 ??
+member$USA.CAN = as.numeric(as.factor(member$USA.CAN))-1
+member %>% 
+  count(USA.CAN)
+```
+
+Gender column has 2834 missing values.
+EmploymentCategory column has 4216 missing values.
+```{r}
+sum(is.na(member$Gender)) 
+sum(is.na(member$EmploymentCategory))
+```
+
+```{r}
+md.pattern(member)
+```
+```{r}
+imp <- mice(member, method = "pmm", m = 5, maxit = 50, printFlag = FALSE)
+member.imp <- complete(imp)
+summary(member.imp)
+```
+
+```{r}
+#member.na <-na.convert.mean(member)
+
+```
+
