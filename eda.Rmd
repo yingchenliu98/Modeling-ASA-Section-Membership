@@ -22,6 +22,9 @@ head(member)
 ```{r}
 dim(member)
 ```
+```{r}
+member %>% count(MEMTYPE)
+```
 
 ```{r}
 summary(member)
@@ -30,6 +33,9 @@ summary(member)
 ```{r}
 member %>% 
   count(AnySection)
+```
+```{r}
+member[duplicated(member[,]),]
 ```
 
 
@@ -70,8 +76,7 @@ ggplot(member, aes(InChapter, fill = AnySection)) +
 
 ## Data processing
 
-
-### Missing value
+### Turn char columns to numeric factor values
 These columns do not have missing value. We turn yes/no to 1/0.
 ```{r}
 member$AnySection = as.numeric(as.factor(member$AnySection))-1
@@ -83,45 +88,36 @@ member$P.SEC.BIOM = as.numeric(as.factor(member$P.SEC.BIOM))-1
 member$P.SEC.BIOP = as.numeric(as.factor(member$P.SEC.BIOP))-1
 member$P.SEC.CNSL = as.numeric(as.factor(member$P.SEC.CNSL))-1
 
-member$P.SEC.COMP = as.numeric(as.factor(member$P.SEC.BIOM))-1
-member$P.SEC.EDUC = as.numeric(as.factor(member$P.SEC.BIOP))-1
-member$P.SEC.ENVR = as.numeric(as.factor(member$P.SEC.CNSL))-1
-member$P.SEC.EPI = as.numeric(as.factor(member$P.SEC.BIOM))-1
-member$P.SEC.GOVT = as.numeric(as.factor(member$P.SEC.BIOP))-1
-member$P.SEC.GRPH = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.COMP = as.numeric(as.factor(member$P.SEC.COMP))-1
+member$P.SEC.EDUC = as.numeric(as.factor(member$P.SEC.EDUC))-1
+member$P.SEC.ENVR = as.numeric(as.factor(member$P.SEC.ENVR))-1
+member$P.SEC.EPI = as.numeric(as.factor(member$P.SEC.EPI))-1
+member$P.SEC.GOVT = as.numeric(as.factor(member$P.SEC.GOVT))-1
+member$P.SEC.GRPH = as.numeric(as.factor(member$P.SEC.GRPH))-1
 
-member$P.SEC.HPSS = as.numeric(as.factor(member$P.SEC.BIOM))-1
-member$P.SEC.MDD = as.numeric(as.factor(member$P.SEC.BIOP))-1
-member$P.SEC.MHS = as.numeric(as.factor(member$P.SEC.CNSL))-1
-member$P.SEC.MKTG = as.numeric(as.factor(member$P.SEC.BIOM))-1
-member$P.SEC.NPAR = as.numeric(as.factor(member$P.SEC.BIOP))-1
-member$P.SEC.QP = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.HPSS = as.numeric(as.factor(member$P.SEC.HPSS))-1
+member$P.SEC.MDD = as.numeric(as.factor(member$P.SEC.MDD))-1
+member$P.SEC.MHS = as.numeric(as.factor(member$P.SEC.MHS))-1
+member$P.SEC.MKTG = as.numeric(as.factor(member$P.SEC.MKTG))-1
+member$P.SEC.NPAR = as.numeric(as.factor(member$P.SEC.NPAR))-1
+member$P.SEC.QP = as.numeric(as.factor(member$P.SEC.QP))-1
 
-member$P.SEC.SBSS = as.numeric(as.factor(member$P.SEC.BIOM))-1
-member$P.SEC.SDNS= as.numeric(as.factor(member$P.SEC.BIOP))-1
-member$P.SEC.SGG = as.numeric(as.factor(member$P.SEC.CNSL))-1
-member$P.SEC.SI = as.numeric(as.factor(member$P.SEC.BIOM))-1
-member$P.SEC.SIS = as.numeric(as.factor(member$P.SEC.BIOP))-1
-member$P.SEC.SLDM = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.SBSS = as.numeric(as.factor(member$P.SEC.SBSS))-1
+member$P.SEC.SDNS= as.numeric(as.factor(member$P.SEC.SDNS))-1
+member$P.SEC.SGG = as.numeric(as.factor(member$P.SEC.SGG))-1
+member$P.SEC.SI = as.numeric(as.factor(member$P.SEC.SI))-1
+member$P.SEC.SIS = as.numeric(as.factor(member$P.SEC.SIS))-1
+member$P.SEC.SLDM = as.numeric(as.factor(member$P.SEC.SLDM))-1
 
-member$P.SEC.SOC = as.numeric(as.factor(member$P.SEC.BIOM))-1
-member$P.SEC.SPES= as.numeric(as.factor(member$P.SEC.BIOP))-1
-member$P.SEC.SRMS = as.numeric(as.factor(member$P.SEC.CNSL))-1
-member$P.SEC.SSPA = as.numeric(as.factor(member$P.SEC.BIOM))-1
-member$P.SEC.TSHS = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.SOC = as.numeric(as.factor(member$P.SEC.SOC))-1
+member$P.SEC.SPES= as.numeric(as.factor(member$P.SEC.SPES))-1
+member$P.SEC.SRMS = as.numeric(as.factor(member$P.SEC.SRMS))-1
+member$P.SEC.SSPA = as.numeric(as.factor(member$P.SEC.SSPA))-1
+member$P.SEC.TSHS = as.numeric(as.factor(member$P.SEC.TSHS))-1
 
 ```
-category1: Business and Economics government 
-BE, CNSL, 
-category2:
-```{r}
-# Business and Economics Statistics
-```
 
-```{r}
-member
-```
-
+### Missing value
 USA.CAN column has 12 missing values, which are less than 1% of the total data. We will impute the missing value with the mean of this column.
 ```{r}
 sum(is.na(member$USA.CAN)) 
@@ -139,8 +135,9 @@ sum(is.na(member$Gender))
 sum(is.na(member$EmploymentCategory))
 ```
 
+Impute the missing value of Age and AgeJoinedASA using MICE method. From the pattern matrix, we could see that the missing values in these two columns are systematic.
 ```{r}
-md.pattern(member)
+md.pattern(member[,6:7])
 ```
 ```{r}
 imp <- mice(member, method = "pmm", m = 5, maxit = 50, printFlag = FALSE)
@@ -148,8 +145,43 @@ member.imp <- complete(imp)
 summary(member.imp)
 ```
 
+#### Description of member.imp
+So far member.imp has JSMtot imputed by mean imputation, Age and AgeJoinedASA imputed by MICE method. Gender and  EmploymentCategory  still have missing values. From the pattern matrix, we see an large overlap of missing values in the two columns.
+
 ```{r}
-#member.na <-na.convert.mean(member)
+md.pattern(member[,8:9])
+```
+
+## Correlation Matrix
+```{r}
+library("Hmisc")
+library(corrplot)
 
 ```
 
+```{r}
+sub.member.imp =cbind(member.imp[,0:7],member.imp[,10:37])
+cor <- cor(as.matrix(sub.member.imp))
+corrplot(cor, type = "upper", 
+         tl.col = "black", tl.srt = 45)
+
+```
+```{r}
+# ++++++++++++++++++++++++++++
+# flattenCorrMatrix
+# ++++++++++++++++++++++++++++
+# cormat : matrix of the correlation coefficients
+# pmat : matrix of the correlation p-values
+flattenCorrMatrix <- function(cormat, pmat) {
+  ut <- upper.tri(cormat)
+  data.frame(
+    row = rownames(cormat)[row(cormat)[ut]],
+    column = rownames(cormat)[col(cormat)[ut]],
+    cor  =(cormat)[ut],
+    p = pmat[ut]
+    )
+}
+cor2<-rcorr(as.matrix(sub.member.imp))
+cor_table = flattenCorrMatrix(cor2$r, cor2$P)
+cor_table[order(abs(cor_table$cor),decreasing = TRUE),]
+```
