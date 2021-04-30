@@ -1,0 +1,127 @@
+---
+title: "data_Teresa"
+output: html_document
+---
+
+```{r}
+
+library(dplyr)
+library(caret)
+library(ggplot2)
+library(tidyverse)
+
+
+```
+
+
+```{r}
+setwd('/Users/teresad/Desktop/harv/stat 149/project/stat149_final_project/data')
+member = read.csv('member-data-2020-stat149.csv')
+
+
+## MISSING VALUES
+
+# Convert yes/no vars with no missing values to 1/0
+member$AnySection = as.numeric(as.factor(member$AnySection))-1
+member$DontPublish = as.numeric(as.factor(member$DontPublish))-1
+member$InChapter = as.numeric(as.factor(member$InChapter))-1
+member$P.SEC.BE = as.numeric(as.factor(member$P.SEC.BE))-1
+member$P.SEC.BIOM = as.numeric(as.factor(member$P.SEC.BIOM))-1
+member$P.SEC.BIOP = as.numeric(as.factor(member$P.SEC.BIOP))-1
+member$P.SEC.CNSL = as.numeric(as.factor(member$P.SEC.CNSL))-1
+member$P.SEC.COMP = as.numeric(as.factor(member$P.SEC.COMP))-1
+member$P.SEC.EDUC = as.numeric(as.factor(member$P.SEC.EDUC))-1
+member$P.SEC.ENVR = as.numeric(as.factor(member$P.SEC.ENVR))-1
+member$P.SEC.EPI = as.numeric(as.factor(member$P.SEC.EPI))-1
+member$P.SEC.GOVT = as.numeric(as.factor(member$P.SEC.GOVT))-1
+member$P.SEC.GRPH = as.numeric(as.factor(member$P.SEC.GRPH))-1
+member$P.SEC.HPSS = as.numeric(as.factor(member$P.SEC.HPSS))-1
+member$P.SEC.MDD = as.numeric(as.factor(member$P.SEC.MDD))-1
+member$P.SEC.MHS = as.numeric(as.factor(member$P.SEC.MHS))-1
+member$P.SEC.MKTG = as.numeric(as.factor(member$P.SEC.MKTG))-1
+member$P.SEC.NPAR = as.numeric(as.factor(member$P.SEC.NPAR))-1
+member$P.SEC.QP = as.numeric(as.factor(member$P.SEC.QP))-1
+member$P.SEC.SBSS = as.numeric(as.factor(member$P.SEC.SBSS))-1
+member$P.SEC.SDNS = as.numeric(as.factor(member$P.SEC.SDNS))-1
+member$P.SEC.SGG = as.numeric(as.factor(member$P.SEC.SGG))-1
+member$P.SEC.SI = as.numeric(as.factor(member$P.SEC.SI))-1
+member$P.SEC.SIS = as.numeric(as.factor(member$P.SEC.SIS))-1
+member$P.SEC.SLDM = as.numeric(as.factor(member$P.SEC.SLDM))-1
+member$P.SEC.SOC = as.numeric(as.factor(member$P.SEC.SOC))-1
+member$P.SEC.SPES = as.numeric(as.factor(member$P.SEC.SPES))-1
+member$P.SEC.SRMS = as.numeric(as.factor(member$P.SEC.SRMS))-1
+member$P.SEC.SSPA = as.numeric(as.factor(member$P.SEC.SSPA))-1
+member$P.SEC.TSHS = as.numeric(as.factor(member$P.SEC.TSHS))-1
+
+# Convert MEMTYPE to a factor variable
+member$MEMTYPE = as.factor(member$MEMTYPE)
+
+# Impute missing values of USA.CAN with the mean (most frequent binary obs)
+table(member$USA.CAN)
+member$USA.CAN = as.numeric(as.factor(member$USA.CAN))-1
+member$USA.CAN[is.na(member$USA.CAN )] = 1
+
+# Convert Gender and EmploymentCategory to factors with NA level
+setwd('/Users/teresad/Desktop/harv/stat 149/project/stat149_final_project')
+source("na-convert.R")
+member$Gender = as.factor(member$Gender)
+member$EmploymentCategory = as.factor(member$EmploymentCategory)
+
+# Handling other missing variables via na.convert.mean
+member= na.convert.mean(member)
+
+head(member)
+
+```
+
+
+
+```{r}
+# Handle Outliers of Age
+member = member[member$Age <101,]
+member = member[member$Age >15, ]
+member = member[member$AgeJoinedASA<90, ]
+member = member[member$AgeJoinedASA>15, ]
+dim(member)
+```
+
+```{r}
+library(regclass)
+
+ SL <- suggest_levels(AnySection ~ MEMTYPE,data=member,target=4,recode=TRUE)
+	SL$Conversion
+	member$MEMTYPE_new <- SL$newlevels
+```
+
+
+```{r}
+## 75% of the sample size
+smp_size <- floor(0.75 * nrow(member))
+
+## set the seed to make your partition reproducible
+set.seed(149)
+train_ind <- sample(seq_len(nrow(member)), size = smp_size)
+
+train <- member[train_ind, ]
+test <- member[-train_ind, ]
+
+write.csv(train,"/Users/teresad/Desktop/harv/stat 149/project/stat149_final_project/data/train_data.csv", row.names = FALSE)
+write.csv(test,"/Users/teresad/Desktop/harv/stat 149/project/stat149_final_project/data/test_data.csv", row.names = FALSE)
+write.csv(member,"/Users/teresad/Desktop/harv/stat 149/project/stat149_final_project/data/full_data.csv", row.names = FALSE)
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
