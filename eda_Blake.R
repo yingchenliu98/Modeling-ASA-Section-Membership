@@ -11,7 +11,6 @@ member = read.csv('member-data-2020-stat149.csv')
 # Convert yes/no vars with no missing values to 1/0
 member$AnySection = as.numeric(as.factor(member$AnySection))-1
 member$DontPublish = as.numeric(as.factor(member$DontPublish))-1
-member$MEMTYPE = as.numeric(as.factor(member$MEMTYPE))-1
 member$InChapter = as.numeric(as.factor(member$InChapter))-1
 member$P.SEC.BE = as.numeric(as.factor(member$P.SEC.BE))-1
 member$P.SEC.BIOM = as.numeric(as.factor(member$P.SEC.BIOM))-1
@@ -40,6 +39,9 @@ member$P.SEC.SPES = as.numeric(as.factor(member$P.SEC.SPES))-1
 member$P.SEC.SRMS = as.numeric(as.factor(member$P.SEC.SRMS))-1
 member$P.SEC.SSPA = as.numeric(as.factor(member$P.SEC.SSPA))-1
 member$P.SEC.TSHS = as.numeric(as.factor(member$P.SEC.TSHS))-1
+
+# Convert MEMTYPE to a factor variable
+member$MEMTYPE = as.factor(member$MEMTYPE)
 
 # Impute missing values of USA.CAN with the mean (most frequent binary obs)
 table(member$USA.CAN)
