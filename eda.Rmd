@@ -183,5 +183,5 @@ flattenCorrMatrix <- function(cormat, pmat) {
 }
 cor2<-rcorr(as.matrix(sub.member.imp))
 cor_table = flattenCorrMatrix(cor2$r, cor2$P)
-cor_table[order(abs(cor_table$cor),decreasing = TRUE),]
+head(cor_table[order(abs(cor_table$cor),decreasing = TRUE),],10)
 ```
