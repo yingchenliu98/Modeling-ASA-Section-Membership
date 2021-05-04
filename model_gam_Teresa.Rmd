@@ -89,6 +89,9 @@ table(test$AnySection, gam_pred>.5)
 gam_acc <- (1521 + 1590)/(1581 + 1516 + 576 + 722)
 print( gam_acc)
 ```
+```{r}
+summary(gam2_acc)
+```
 
 ```{r}
 #COMPARE ACCURACY
