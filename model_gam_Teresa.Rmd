@@ -50,24 +50,19 @@ summary(full.gam1)
 ```{r}
 #REDUCED GAM model, using FINAL Predictors of GLM with interaction terms 
 
-gam2 = gam(AnySection ~ JSMtot + USA.CAN + MEMTYPE_new + ti(Age, EmploymentCategory, bs = 'fs') + s(AgeJoinedASA) + Gender + InChapter + Age.na +P.SEC.BIOM+P.SEC.BIOP+P.SEC.COMP
-                      +P.SEC.MHS+P.SEC.SPES+P.SEC.SRMS , family = binomial, data = full )
-member.finalglm = glm(AnySection ~ AgeJoinedASA+Gender+Age*EmploymentCategory
-                      +JSMtot+USA.CAN+InChapter+P.SEC.BIOM+P.SEC.BIOP+P.SEC.COMP
-                      +P.SEC.MHS+P.SEC.SPES+P.SEC.SRMS+Age.na
-                      +MEMTYPE_new, family=binomial, data=full)
+gam2 = gam(AnySection ~ s(Age)+s(AgeJoinedASA)+Age.na+Gender+EmploymentCategory+JSMtot+USA.CAN+DontPublish+InChapter+MEMTYPE_new+P.SEC.BE+P.SEC.BIOM+P.SEC.BIOP+P.SEC.CNSL+P.SEC.COMP+P.SEC.EDUC+P.SEC.ENVR+P.SEC.EPI+P.SEC.GOVT+P.SEC.GRPH+P.SEC.HPSS+P.SEC.MDD+P.SEC.MHS+P.SEC.MKTG+P.SEC.NPAR+P.SEC.QP+P.SEC.SBSS+P.SEC.SDNS+P.SEC.SGG+P.SEC.SI+P.SEC.SIS+P.SEC.SLDM+P.SEC.SOC+P.SEC.SPES+P.SEC.SRMS+P.SEC.SSPA+P.SEC.TSHS+ ti(Age, EmploymentCategory, bs = 'fs') + ti(Age, JSMtot, bs = 'fs'), family=binomial, data=full)
+             
+member.finalglm = glm(AnySection ~ Age+AgeJoinedASA+Age.na+Gender+EmploymentCategory+JSMtot+USA.CAN+DontPublish+InChapter+MEMTYPE_new+P.SEC.BE+P.SEC.BIOM+P.SEC.BIOP+P.SEC.CNSL+P.SEC.COMP+P.SEC.EDUC+P.SEC.ENVR+P.SEC.EPI+P.SEC.GOVT+P.SEC.GRPH+P.SEC.HPSS+P.SEC.MDD+P.SEC.MHS+P.SEC.MKTG+P.SEC.NPAR+P.SEC.QP+P.SEC.SBSS+P.SEC.SDNS+P.SEC.SGG+P.SEC.SI+P.SEC.SIS+P.SEC.SLDM+P.SEC.SOC+P.SEC.SPES+P.SEC.SRMS+P.SEC.SSPA+P.SEC.TSHS+Age*EmploymentCategory+Age*JSMtot, family=binomial, data=full)
 anova( member.finalglm, gam2, test='Chi')
 
 
 ```
 ```{r}
 # no interaction term 
-gam3 = gam(AnySection ~ JSMtot + USA.CAN + MEMTYPE_new + s(Age) + EmploymentCategory + s(AgeJoinedASA) + Gender + InChapter + Age.na +P.SEC.BIOM+P.SEC.BIOP+P.SEC.COMP
-                      +P.SEC.MHS+P.SEC.SPES+P.SEC.SRMS , family = binomial, data = full )
-member.finalglm2 = glm(AnySection ~ AgeJoinedASA+Gender+Age+EmploymentCategory
-                      +JSMtot+USA.CAN+InChapter+P.SEC.BIOM+P.SEC.BIOP+P.SEC.COMP
-                      +P.SEC.MHS+P.SEC.SPES+P.SEC.SRMS+Age.na
-                      +MEMTYPE_new, family=binomial, data=full)
+gam3 = gam(AnySection ~ s(Age)+s(AgeJoinedASA)+Age.na+Gender+EmploymentCategory+JSMtot+USA.CAN+DontPublish+InChapter+MEMTYPE_new+P.SEC.BE+P.SEC.BIOM+P.SEC.BIOP+P.SEC.CNSL+P.SEC.COMP+P.SEC.EDUC+P.SEC.ENVR+P.SEC.EPI+P.SEC.GOVT+P.SEC.GRPH+P.SEC.HPSS+P.SEC.MDD+P.SEC.MHS+P.SEC.MKTG+P.SEC.NPAR+P.SEC.QP+P.SEC.SBSS+P.SEC.SDNS+P.SEC.SGG+P.SEC.SI+P.SEC.SIS+P.SEC.SLDM+P.SEC.SOC+P.SEC.SPES+P.SEC.SRMS+P.SEC.SSPA+P.SEC.TSHS, family=binomial, data=full)
+             
+member.finalglm2 = glm(AnySection ~ Age+AgeJoinedASA+Age.na+Gender+EmploymentCategory+JSMtot+USA.CAN+DontPublish+InChapter+MEMTYPE_new+P.SEC.BE+P.SEC.BIOM+P.SEC.BIOP+P.SEC.CNSL+P.SEC.COMP+P.SEC.EDUC+P.SEC.ENVR+P.SEC.EPI+P.SEC.GOVT+P.SEC.GRPH+P.SEC.HPSS+P.SEC.MDD+P.SEC.MHS+P.SEC.MKTG+P.SEC.NPAR+P.SEC.QP+P.SEC.SBSS+P.SEC.SDNS+P.SEC.SGG+P.SEC.SI+P.SEC.SIS+P.SEC.SLDM+P.SEC.SOC+P.SEC.SPES+P.SEC.SRMS+P.SEC.SSPA+P.SEC.TSHS, family=binomial, data=full)
+
 anova( member.finalglm2, gam3, test='Chi')
 
 
@@ -86,25 +81,24 @@ plot(gam2, rug=T, se=T, col="red")
 
 #COMPARE ACCURACY
 #GAM with interaction
-gam2_acc = gam(AnySection ~ JSMtot + USA.CAN + MEMTYPE_new + ti(Age, EmploymentCategory, bs = "fs") + s(AgeJoinedASA) + Gender + InChapter + Age.na +P.SEC.BIOM+P.SEC.BIOP+P.SEC.COMP
-                      +P.SEC.MHS+P.SEC.SPES+P.SEC.SRMS , family = binomial, data = train )
+
+gam2_acc = gam(AnySection ~ s(Age)+s(AgeJoinedASA)+Age.na+Gender+EmploymentCategory+JSMtot+USA.CAN+DontPublish+InChapter+MEMTYPE_new+P.SEC.BE+P.SEC.BIOM+P.SEC.BIOP+P.SEC.CNSL+P.SEC.COMP+P.SEC.EDUC+P.SEC.ENVR+P.SEC.EPI+P.SEC.GOVT+P.SEC.GRPH+P.SEC.HPSS+P.SEC.MDD+P.SEC.MHS+P.SEC.MKTG+P.SEC.NPAR+P.SEC.QP+P.SEC.SBSS+P.SEC.SDNS+P.SEC.SGG+P.SEC.SI+P.SEC.SIS+P.SEC.SLDM+P.SEC.SOC+P.SEC.SPES+P.SEC.SRMS+P.SEC.SSPA+P.SEC.TSHS+ ti(Age, EmploymentCategory, bs = 'fs') + ti(Age, JSMtot, bs = 'fs'), family=binomial, data=train)
 
 gam_pred <- predict.gam(gam2_acc, test, type = "response")
 table(test$AnySection, gam_pred>.5)
-gam_acc <- (1508 + 1601)/(1581 + 1516 + 576 + 722)
+gam_acc <- (1521 + 1590)/(1581 + 1516 + 576 + 722)
 print( gam_acc)
 ```
 
 ```{r}
 #COMPARE ACCURACY
 #GLM with interaction
-member.finalglm_acc = glm(AnySection ~ AgeJoinedASA+Gender+Age*EmploymentCategory
-                      +JSMtot+USA.CAN+InChapter+P.SEC.BIOM+P.SEC.BIOP+P.SEC.COMP
-                      +P.SEC.MHS+P.SEC.SPES+P.SEC.SRMS+Age.na
-                      +MEMTYPE_new, family=binomial, data=train)
+             
+member.finalglm_acc = glm(AnySection ~ Age+AgeJoinedASA+Age.na+Gender+EmploymentCategory+JSMtot+USA.CAN+DontPublish+InChapter+MEMTYPE_new+P.SEC.BE+P.SEC.BIOM+P.SEC.BIOP+P.SEC.CNSL+P.SEC.COMP+P.SEC.EDUC+P.SEC.ENVR+P.SEC.EPI+P.SEC.GOVT+P.SEC.GRPH+P.SEC.HPSS+P.SEC.MDD+P.SEC.MHS+P.SEC.MKTG+P.SEC.NPAR+P.SEC.QP+P.SEC.SBSS+P.SEC.SDNS+P.SEC.SGG+P.SEC.SI+P.SEC.SIS+P.SEC.SLDM+P.SEC.SOC+P.SEC.SPES+P.SEC.SRMS+P.SEC.SSPA+P.SEC.TSHS+Age*EmploymentCategory+Age*JSMtot, family=binomial, data=train)
+
 glm_pred <- predict(member.finalglm_acc, test, type = "response")
 table(test$AnySection, glm_pred>.5)
-gam_acc <- (1567 + 1516)/(1567 + 1516 + 576 + 736)
+gam_acc <- (1570+ 1527)/(1567 + 1516 + 576 + 736)
 print( gam_acc)
 ```
 
